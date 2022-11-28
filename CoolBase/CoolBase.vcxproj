@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{047E3DA4-A340-45DC-AA1A-F73713AD46EB}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>CoolBase</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;COOLBASE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;COOLBASE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\base\karrayptr.h" />
+    <ClInclude Include="..\include\base\karrayt.h" />
+    <ClInclude Include="..\include\base\kbuffer.h" />
+    <ClInclude Include="..\include\base\kcolor.h" />
+    <ClInclude Include="..\include\base\kdef.h" />
+    <ClInclude Include="..\include\base\kdeft.h" />
+    <ClInclude Include="..\include\base\kdll.h" />
+    <ClInclude Include="..\include\base\kfile.h" />
+    <ClInclude Include="..\include\base\kinc.h" />
+    <ClInclude Include="..\include\base\kjson.h" />
+    <ClInclude Include="..\include\base\klistptr.h" />
+    <ClInclude Include="..\include\base\klistt.h" />
+    <ClInclude Include="..\include\base\klog.h" />
+    <ClInclude Include="..\include\base\kbase.h" />
+    <ClInclude Include="..\include\base\klooper.h" />
+    <ClInclude Include="..\include\base\knethelp.h" />
+    <ClInclude Include="..\include\base\ksocket.h" />
+    <ClInclude Include="..\include\base\kstring.h" />
+    <ClInclude Include="..\include\base\kstringarray.h" />
+    <ClInclude Include="..\include\base\kstringhelp.h" />
+    <ClInclude Include="..\include\base\kthread.h" />
+    <ClInclude Include="..\include\base\ktime.h" />
+    <ClInclude Include="..\include\base\kxobj.h" />
+    <ClInclude Include="..\include\base\kvar.h" />
+    <ClInclude Include="..\include\base\kxml.h" />
+    <ClInclude Include="CoolBase.h" />
+    <ClInclude Include="kresource.h" />
+    <ClInclude Include="MsXmlParse.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CoolBase.cpp" />
+    <ClCompile Include="dllmain.cpp">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="karrayptr.cpp" />
+    <ClCompile Include="KColor.cpp" />
+    <ClCompile Include="KDll.cpp" />
+    <ClCompile Include="KFile.cpp" />
+    <ClCompile Include="KJson.cpp" />
+    <ClCompile Include="KList.cpp" />
+    <ClCompile Include="KLooper.cpp" />
+    <ClCompile Include="KNetHelp.cpp" />
+    <ClCompile Include="KRef.cpp" />
+    <ClCompile Include="KSocket.cpp" />
+    <ClCompile Include="KString.cpp" />
+    <ClCompile Include="KStringArray.cpp" />
+    <ClCompile Include="KStringHelp.cpp" />
+    <ClCompile Include="KThread.cpp" />
+    <ClCompile Include="KTime.cpp" />
+    <ClCompile Include="KXObj.cpp" />
+    <ClCompile Include="KVariant.cpp" />
+    <ClCompile Include="KXml.cpp" />
+    <ClCompile Include="KXmlDoc.cpp" />
+    <ClCompile Include="KLog.cpp" />
+    <ClCompile Include="MsXmlParse.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

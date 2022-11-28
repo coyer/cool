@@ -1,0 +1,8 @@
+LIBRARY "CoolCore"
+
+EXPORTS
+	KExtMgrCreate
+	KExtMgrDestroy
+
+	KDllMgrCreate
+	KDllMgrDestroy

@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{f0299d02-1eb1-4d98-acd9-ebfcfc448665}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\base">
+      <UniqueIdentifier>{63cf4d0b-72bc-46aa-9953-78692b685cc3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CoolBase.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\base\kbuffer.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\base\kdef.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\base\kinc.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\base\kstring.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\base\kthread.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\base\kxml.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\base\karrayt.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+    <ClInclude Include="MsXmlParse.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\base\kfile.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\base\kvar.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\base\klog.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\base\kdll.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\base\kstringhelp.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\base\kbase.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\base\kdeft.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\base\kcolor.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\base\ksocket.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\base\kstringarray.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\base\klistt.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\base\knethelp.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\base\kxobj.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\base\karrayptr.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\base\klistptr.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\base\klooper.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\base\ktime.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+    <ClInclude Include="kresource.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\base\kjson.h">
+      <Filter>include\base</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CoolBase.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="KString.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="KRef.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="KXml.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="KXmlDoc.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MsXmlParse.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="KFile.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="KThread.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="KVariant.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="KList.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="KLog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="KDll.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="KStringHelp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="KColor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="KSocket.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="KStringArray.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="KNetHelp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="KXObj.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="karrayptr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="KLooper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="KTime.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="KJson.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
