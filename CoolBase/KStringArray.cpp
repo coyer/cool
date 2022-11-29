@@ -160,9 +160,9 @@ void s_DestroyDataProcW(void* pdata)
 
 KStringArrayW::KStringArrayW()
 {
-	m_sortMode = 1;
-	m_datas.SetSortProc(s_CompareDataProcW);
-	m_datas.SetDestroyDataProc(s_DestroyDataProcW);
+	m_sortMode = 0;
+	//m_datas.SetSortProc(s_CompareDataProcW);
+	//m_datas.SetDestroyDataProc(s_DestroyDataProcW);
 }
 
 KStringArrayW::~KStringArrayW()

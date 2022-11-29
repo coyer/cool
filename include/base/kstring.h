@@ -32,6 +32,8 @@ public:
 	int		Append(KStringA str);
 
 	void	Clear();
+	bool	IsNull();
+
 	int		Splice(int start = 0, int len = -1);
 	int		SetData(const char* str, int len = -1);
 	int		SetData(const wchar_t* str, int len = -1);
@@ -146,6 +148,7 @@ public:
 	int		Append(KStringW str);
 
 	void	Clear();
+	const bool	IsNull();
 
 	int		Splice(int start = 0, int len = -1);
 	int		SetData(const wchar_t* str, int len = -1);

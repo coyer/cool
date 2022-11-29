@@ -230,6 +230,10 @@ public:
 		//	m_pData[m_nCount] = 0;
 	}
 
+	const bool IsNull() {
+		return m_nCount == 0 ? true : false;
+	}
+
 	T*	GetData() const
 	{
 		return m_pData;

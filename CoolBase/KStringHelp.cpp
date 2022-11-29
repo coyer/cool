@@ -131,7 +131,7 @@ KAPI KStringA KBuffer2HexStringA(unsigned char* buf, int buflen, int insertblank
 	return str;
 }
 
-KAPI KStringW	KBuffer2HexStringW(unsigned char* buf, int buflen, int insertblank, int changeline, int linenumber)
+KAPI KStringW KBuffer2HexStringW(unsigned char* buf, int buflen, int insertblank, int changeline, int linenumber)
 {
 	static wchar_t* hexstringW = L"0123456789ABCDEF";
 	

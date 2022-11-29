@@ -168,6 +168,11 @@ void KStringA::Clear()
 	m_pStr->Clear();
 }
 
+bool KStringA::IsNull()
+{
+	return m_pStr->IsNull();
+}
+
 int KStringA::Splice(int start, int len)
 {
 	_AllocString();
@@ -864,6 +869,11 @@ void KStringW::Clear()
 {
 	_AllocString();
 	m_pStr->Clear();
+}
+
+const bool KStringW::IsNull()
+{
+	return m_pStr->IsNull();
 }
 
 int	KStringW::Splice(int start, int len)

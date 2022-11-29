@@ -113,7 +113,6 @@ void KThread::OnThread(int index)
 	::InterlockedDecrement(&m_threadCount);
 }
 
-
 void KThread::SetThreadProc(KThreadProc procDoing, void* pClientDoing)
 {
 	if (procDoing)
@@ -136,10 +135,12 @@ void KThread::SetThreadProc(KThreadProcEx procDoing, void* pClientDoing)
 	m_procCallbackData = pClientDoing;
 }
 
-bool KThread::Start(int threadCount)
+int KThread::Start(int threadCount)
 {
 	if (0 == m_procType)
 		return false;
+
+	if (threadCount < m_threadCount) return 0;
 
 	int t = threadCount - m_threadCount;
 	for(int i=0; i<t; i++)
@@ -151,7 +152,7 @@ bool KThread::Start(int threadCount)
 		m_Handles.Add(handle);
 	}
 
-	return t > 0 ? true : false;
+	return t;
 }
 
 int	KThread::GetThreadCount()

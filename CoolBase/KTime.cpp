@@ -298,3 +298,17 @@ KStringA KTime::ToStringA()
 {
 	return KStringA("");
 }
+
+KStringW KTime::ToStringW()
+{
+	return KStringW("");
+}
+
+KString	KTime::ToString()
+{
+#ifdef UNICODE
+	return ToStringW();
+#else
+	return ToStringA();
+#endif
+}

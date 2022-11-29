@@ -58,7 +58,7 @@ public:
 	void	SetThreadProc(KThreadProc procDoing, void* pClientDoing);
 	void	SetThreadProc(KThreadProcEx procDoing, void* pClientDoing);
 
-	bool	Start(int threadCount = 1);
+	int		Start(int threadCount = 1);
 
 	int		GetThreadCount();
 	

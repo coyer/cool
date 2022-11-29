@@ -28,5 +28,5 @@ Detail : .
 #include "kvar.h"
 #include "kfile.h"
 #include "kthread.h"
-#include "klooper.h"
+#include "kthreadpool.h"
 #include "kjson.h"

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "../include/base/klooper.h"
+#include "../include/base/kthreadpool.h"
 
 typedef struct tagJobDataInfo
 {
@@ -8,24 +8,28 @@ typedef struct tagJobDataInfo
 	void* jobVoid;
 }JobDataInfo;
 
-void s_KLooperProc(void* pVoid)
+void s_KThreadPoolProc(void* pVoid)
 {
-	KLooper* pool = (KLooper*)pVoid;
+	KThreadPool* pool = (KThreadPool*)pVoid;
 	pool->OnThreadDoing();
 }
 
-KLooper::KLooper()
+KThreadPool::KThreadPool()
 {
 	m_running = false;
-	m_thread.SetThreadProc(s_KLooperProc, this);
+	m_sleepMs = 100;
+	m_maxThreadCount = 2;
+
+	m_thread.SetThreadProc(s_KThreadPoolProc, this);
 }
 
-KLooper::~KLooper()
+KThreadPool::~KThreadPool()
 {
+	Stop();
 	ClearJob();
 }
 
-void KLooper::AddJob(KJobExecuteProc jobProc, void* jobParam, void* pVoid)
+void KThreadPool::AddJob(KJobExecuteProc jobProc, void* jobParam, void* pVoid)
 {
 	m_lock.Lock();
 	JobDataInfo* jobInfo = new JobDataInfo();
@@ -36,7 +40,7 @@ void KLooper::AddJob(KJobExecuteProc jobProc, void* jobParam, void* pVoid)
 	m_lock.Unlock();
 }
 
-void KLooper::ClearJob()
+void KThreadPool::ClearJob()
 {
 	m_lock.Lock();
 	KPosition pos = m_jobs.GetHeadPos();
@@ -51,73 +55,6 @@ void KLooper::ClearJob()
 	m_lock.Unlock();
 }
 
-int	KLooper::Start()
-{
-	if (m_running)
-		return 0;
-
-	m_running = true;
-	m_thread.Start(1);
-
-	return 1;
-}
-
-void KLooper::Stop(int waitms)
-{
-	m_running = false;
-	m_thread.WaitThreadEnd(waitms);
-}
-
-void* KLooper::GetJob()
-{
-	void* pJob = 0;
-	m_lock.Lock();
-	pJob = m_jobs.GetHead(true);
-	m_lock.Unlock();
-
-	return pJob;
-}
-
-void KLooper::OnThreadDoing()
-{
-	while(m_running)
-	{
-		void* pJob = GetJob();
-		if (0 == pJob)
-		{
-			Sleep(0);			
-		}
-		else
-		{
-			OnDoingJob(pJob);
-		}
-	}
-}
-
-void KLooper::OnDoingJob(void* pJob)
-{
-	JobDataInfo* d = (JobDataInfo*)pJob;
-	if (d->jobProc)
-	{
-		d->jobProc(d->jobParam, d->jobVoid);
-	}
-
-	delete d;
-}
-
-
-//////////////////////////////////////////////////////////////////////////
-KThreadPool::KThreadPool()
-{
-	m_running = false;
-	m_maxThreadCount = 2;
-	m_sleepMs = 100;
-}
-
-KThreadPool::~KThreadPool()
-{
-}
-
 void KThreadPool::SetNoJobWaitTime(int ms)
 {
 	m_sleepMs = ms;
@@ -126,16 +63,6 @@ void KThreadPool::SetNoJobWaitTime(int ms)
 int	KThreadPool::GetNoJobWaitTime()
 {
 	return m_sleepMs;
-}
-
-void KThreadPool::SetThreadMaxCount(int maxCount)
-{
-	m_maxThreadCount = maxCount;
-}
-
-int	KThreadPool::GetThreadMaxCount()
-{
-	return m_maxThreadCount;
 }
 
 int	KThreadPool::Start()
@@ -149,6 +76,22 @@ int	KThreadPool::Start()
 	return 1;
 }
 
+void KThreadPool::Stop(int waitms)
+{
+	m_running = false;
+	m_thread.WaitThreadEnd(waitms);
+}
+
+void* KThreadPool::GetJob()
+{
+	void* pJob = 0;
+	m_lock.Lock();
+	pJob = m_jobs.GetHead(true);
+	m_lock.Unlock();
+
+	return pJob;
+}
+
 void KThreadPool::OnThreadDoing()
 {
 	while(m_running)
@@ -156,11 +99,32 @@ void KThreadPool::OnThreadDoing()
 		void* pJob = GetJob();
 		if (0 == pJob)
 		{
-			Sleep(m_sleepMs);			
+			Sleep(m_sleepMs);
 		}
 		else
 		{
 			OnDoingJob(pJob);
 		}
 	}
+}
+
+void KThreadPool::OnDoingJob(void* pJob)
+{
+	JobDataInfo* d = (JobDataInfo*)pJob;
+	if (d->jobProc)
+	{
+		d->jobProc(d->jobParam, d->jobVoid);
+	}
+
+	delete d;
+}
+
+void KThreadPool::SetThreadMaxCount(int maxCount)
+{
+	m_maxThreadCount = maxCount;
+}
+
+int	KThreadPool::GetThreadMaxCount()
+{
+	return m_maxThreadCount;
 }

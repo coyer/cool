@@ -136,9 +136,13 @@ public:
 	virtual  KXmlNode*	CreateNode(KXmlNode::NodeType type = KXmlNode::KXML_TYPE_ELEMENT);
 
 	virtual  bool	CreateNewDoc(const wchar_t* rootNodeName);
+	virtual  bool	CreateNewDoc(KString& rootNodeName);
 	virtual  bool	LoadFromFile(const wchar_t* filename);
 	virtual  bool	LoadFromFile(const char* filename);
+	virtual  bool	LoadFromFile(const KString& filename);
 	virtual  bool	LoadFromString(const char* strXml);
+	virtual  bool	LoadFromString(const KString& strXml);
 	virtual  bool	LoadFromString(const wchar_t* strXml);
 	virtual  bool	LoadFromUtf8String(const char* strXml);
+	virtual  bool	LoadFromUtf8String(const KStringA& strXml);
 };

@@ -49,6 +49,15 @@ bool KXmlDoc::CreateNewDoc(const wchar_t* rootNodeName)
 	if (0 == rootNodeName || 0 == rootNodeName[0])
 		return false;
 
+	KString strName = rootNodeName;
+
+	return CreateNewDoc(strName);
+}
+
+bool KXmlDoc::CreateNewDoc(KString& rootNodeName)
+{
+	if (rootNodeName.IsNull()) return false;
+
 	if (m_pRoot)
 		m_pRoot->Release();
 
@@ -68,6 +77,11 @@ bool KXmlDoc::LoadFromString(const char* strXml)
 {
 	KStringW strXmlW = strXml;
 	return LoadFromString(strXmlW.c_str());
+}
+
+bool KXmlDoc::LoadFromString(const KString& strXml)
+{
+	return LoadFromString(strXml.c_str());
 }
 
 bool KXmlDoc::LoadFromUtf8String(const char* strXml)
@@ -93,6 +107,20 @@ bool KXmlDoc::LoadFromFile(const wchar_t* filename)
 	return true;
 }
 
+bool KXmlDoc::LoadFromFile(const KString& filename)
+{
+	if (m_pRoot)
+		m_pRoot->Release();
+
+	CMsXmlParse parse;
+	m_pRoot = parse.LoadFile(filename);
+
+	if (0 == m_pRoot)
+		return false;
+
+	return true;
+}
+
 bool KXmlDoc::LoadFromString(const wchar_t* strXml)
 {
 	if (m_pRoot)
@@ -105,6 +133,13 @@ bool KXmlDoc::LoadFromString(const wchar_t* strXml)
 		return false;
 
 	return true;
+}
+
+bool KXmlDoc::LoadFromUtf8String(const KStringA& strXml)
+{
+	KStringW strW = KStringUtf82W(strXml);
+	return LoadFromString(strW);
+
 }
 #else
 bool KXmlDoc::LoadFromFile(const wchar_t* filename)

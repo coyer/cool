@@ -2,6 +2,9 @@
 #include "MsXmlParse.h"
 #include "../include/base/kfile.h"
 
+
+#pragma comment(lib, "msxml6.lib")
+
 CMsXmlParse::CMsXmlParse(void)
 {
 }
@@ -11,8 +14,10 @@ CMsXmlParse::~CMsXmlParse(void)
 {
 }
 
-KXmlNode* CMsXmlParse::LoadFile(const wchar_t* strFilename)
+KXmlNode* CMsXmlParse::LoadFile(const TCHAR* strFilename)
 {
+	if (!strFilename) return NULL;
+
 	HRESULT hr;
 	IXMLDOMDocument * pXmlDoc = 0;
 	KXmlNode* pRet = 0;
@@ -44,8 +49,15 @@ KXmlNode* CMsXmlParse::LoadFile(const wchar_t* strFilename)
 	return pRet;
 }
 
-KXmlNode* CMsXmlParse::LoadString(const wchar_t* strXml)
+KXmlNode* CMsXmlParse::LoadFile(const KString& strFilename)
 {
+	return LoadFile(strFilename.c_str());
+}
+
+KXmlNode* CMsXmlParse::LoadString(const TCHAR* strXml)
+{
+	if (!strXml) return NULL;
+
 	HRESULT hr;
 	IXMLDOMDocument * pXmlDoc = 0;
 	KXmlNode* pRet = 0;
@@ -74,6 +86,11 @@ KXmlNode* CMsXmlParse::LoadString(const wchar_t* strXml)
 
 	::CoUninitialize();
 	return pRet;
+}
+
+KXmlNode* CMsXmlParse::LoadString(const KString& strXml)
+{
+	return LoadString(strXml.c_str());
 }
 
 KXmlNode* CMsXmlParse::ParseElement(IXMLDOMNode* pMsNode)
@@ -404,4 +421,9 @@ bool CMsXmlParse::SaveXmlFile(const char* strFilename, KXmlNode* pRoot)
 	file.Write(strUtf8.GetBuffer(), strUtf8.GetLength());
 	file.Close();
 	return true;
+}
+
+bool CMsXmlParse::SaveXmlFile(const KString& strFilename, KXmlNode* pRoot)
+{
+	return SaveXmlFile(strFilename.c_str(), pRoot);
 }

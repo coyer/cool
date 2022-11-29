@@ -179,8 +179,6 @@ class KListT
 	int			m_nCount;
 
 public:
-
-
 	KListT()
 	{
 		m_pHead = 0;

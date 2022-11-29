@@ -12,50 +12,38 @@ Detail : hide linux, windows difference.
 
 #include "kdef.h"
 #include "karrayptr.h"
+#include "kthread.h"
 
 
-class KAPI KLooper
+class KAPI KThreadPool
 {
 protected:
 	KThread		m_thread;
 	KListPtr	m_jobs;
 	bool		m_running;
 	KThreadLock	m_lock;
+	int			m_sleepMs;
+	int			m_maxThreadCount;
 
 protected:
 	void*		GetJob();
 
 public:
-	KLooper();
-	~KLooper();
+	KThreadPool();
+	~KThreadPool();
 
 	void	AddJob(KJobExecuteProc jobProc, void* jobParam, void* pVoid);
 	void	ClearJob();
 
 	virtual int		Start();
-	virtual void	Stop(int waitms);
+	virtual void	Stop(int waitms = -1);
 
 	virtual void	OnThreadDoing();
 	virtual void	OnDoingJob(void* pJob);
-};
-
-class KAPI KThreadPool : public KLooper
-{
-protected:
-	int			m_maxThreadCount;
-	int			m_sleepMs;
-
-public:
-	KThreadPool();
-	~KThreadPool();
 
 	void	SetNoJobWaitTime(int ms);
 	int		GetNoJobWaitTime();
 
 	void	SetThreadMaxCount(int maxCount);
 	int		GetThreadMaxCount();
-
-	int		Start();
-
-	void	OnThreadDoing();
 };
