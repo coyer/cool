@@ -1148,7 +1148,7 @@ int	KStringW::Compare(const wchar_t* str)
 	return KStringDataW::ComperData(m_pStr->GetData(), str);
 }
 
-int	KStringW::Compare(const KStringW& str)
+int	KStringW::Compare(KStringW& str)
 {
 	if (m_pStr == str.m_pStr)
 		return 0;

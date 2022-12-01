@@ -8,13 +8,12 @@
 #endif
 
 #define READ_LINE_MAXLEN		2048
-unsigned char g_return_line_flag[4] = {0x0D, 0x00, 0x0A, 0x00};
 
 KFile::KFile()
 {
 	m_file = 0;
 	m_flagLen = 0;
-	m_format = CodeFormat::cf_utf8;
+	m_fileSize = 0;
 }
 
 KFile::~KFile()
@@ -23,86 +22,42 @@ KFile::~KFile()
 		fclose(m_file);
 }
 
-bool KFile::Open(const wchar_t* filename, unsigned int openflag)
+bool KFile::Open(const wchar_t* filename, bool writemode)
+{
+	if (!filename) return false;
+	KString str = filename;
+	return Open(str, writemode);
+}
+
+bool KFile::Open(const char* filename, bool writemode)
+{
+	if (!filename) return false;
+	KString str = filename;
+	return Open(str, writemode);
+}
+
+bool KFile::Open(const KString& filename, bool writemode)
 {
 	Close();
 
-	wchar_t szFlag[20] = {0};
-	int flagIndex = 0;
-	
-	if (openflag & modeNoTruncate)
-		szFlag[flagIndex++] = L'a';
-	else if (openflag & modeWrite)
-		szFlag[flagIndex++] = L'w';
-	else
-		szFlag[flagIndex++] = L'r';
+	KString sFlag;
+	if (writemode) {
+		sFlag = _T("w+b");
+	}
+	else {
+		sFlag = _T("rb");
+	}
 
-	if (openflag & modeReadWrite || openflag & modeCreate)
-		szFlag[flagIndex++] = L'+';	
-
-	szFlag[flagIndex++] = L'b';
-	//if (openflag & typeBinary)
-	//	szFlag[flagIndex++] = L'b';
-	//else if (openflag & typeText)
-	//	szFlag[flagIndex++] = L't';
-
-	m_file = _wfopen(filename, szFlag);
+	m_file = _tfopen(filename.c_str(), sFlag.c_str());
 	if (0 == m_file)
 		return false;
 
 	m_filename = filename;
 
-#ifdef WIN32
-  if (openflag & (~typeBinary))
-		_ParseFormat();
-#endif
+	m_fileSize = filelength(fileno(m_file));
 	SeekToBegin();
 
 	return true;
-}
-
-bool KFile::Open(const char* filename, unsigned int openflag)
-{
-	Close();
-
-	char szFlag[20] = {0};
-	int flagIndex = 0;
-	
-	if (openflag & modeNoTruncate)
-		szFlag[flagIndex++] = 'a';
-	else if (openflag & modeWrite)
-		szFlag[flagIndex++] = 'w';
-	else
-		szFlag[flagIndex++] = 'r';
-
-	if (openflag & modeReadWrite || openflag & modeCreate)
-		szFlag[flagIndex++] = '+';	
-
-	szFlag[flagIndex++] = 'b';
-	//if (openflag & typeBinary)
-	//	szFlag[flagIndex++] = 'b';
-	//else
-	//	szFlag[flagIndex++] = 't';
-
-	m_file = fopen(filename, szFlag);
-	if (0 == m_file)
-		return false;
-
-	m_filename = filename;
-
-#ifdef WIN32
-	if (openflag & (~typeBinary))
-		_ParseFormat();
-#endif
-
-	SeekToBegin();
-
-	return true;
-}
-
-bool KFile::Open(KString& filename, unsigned int openflag)
-{
-	return Open(filename.c_str(), openflag);
 }
 
 bool KFile::IsOpened()
@@ -115,6 +70,11 @@ KString	KFile::GetFilename()
 	return m_filename;
 }
 
+__int64 KFile::GetFileSize()
+{
+	return m_fileSize;
+}
+
 FILE* KFile::Detach()
 {
 	FILE* fp = m_file;
@@ -125,8 +85,7 @@ FILE* KFile::Detach()
 
 void KFile::Attach(FILE* file)
 {
-	if (m_file)
-		fclose(m_file);
+	Close();
 
 	m_file = file;
 }
@@ -137,242 +96,16 @@ void KFile::Close()
 	{
 		fclose(m_file);
 		m_file = 0;
-		m_format = CodeFormat::cf_ansi;
 	}
 }
 
-static unsigned char utf8[4] = {0xEF, 0xBB, 0xBF, 0x00};
-static unsigned char utf16[3] = {0xFF, 0xFE, 0x00};
-static unsigned char utf16_big[3] = {0xFE, 0xFF, 0x00};
-
-void KFile::_ParseFormat()
-{
-	m_format = cf_ansi;
-
-	int buffer[4] = {0};
-	int len = fread(buffer, 1, 3, m_file);
-	fseek(m_file, 0, SEEK_SET);
-	if (len == 0)
-	{
-#ifdef WIN32
-		SetCodeFormat(cf_utf16);
-#else
-		SetCodeFormat(cf_ansi);
-#endif
-		return;
-	}
-
-	if (len < 2)
-		return;
-
-	if (memcmp(buffer, utf16, 2) == 0)
-	{
-		m_format = cf_utf16;
-		m_flagLen = 2;
-	}
-	else if (memcmp(buffer, utf16_big, 2) == 0)
-	{
-		m_format = cf_utf16_be;
-		m_flagLen = 2;
-	}
-	else if (memcmp(buffer, utf8, 3) == 0)
-	{
-		m_format = cf_utf8;
-		m_flagLen = 3;
-	}
-	else
-	{
-		m_format = cf_ansi;
-		m_flagLen = 0;
-		fseek(m_file, 0, SEEK_SET);
-	}
-}
-
-void UpdateBigToLittle(wchar_t* pStr)
-{
-	while(*pStr)
-	{
-		char* p = (char*)(pStr);
-		char c = p[0];
-		p[0] = p[1];
-		p[1] = c;
-
-		pStr++;
-	}
-}
-
-int	KFile::ReadString(KStringW & strW)
-{
-	if (m_format == CodeFormat::cf_ansi)
-	{
-		char buf[READ_LINE_MAXLEN] = {0};
-		if (0 == fgets(buf, READ_LINE_MAXLEN, m_file))
-			return 0;
-		strW = buf;
-	}
-	else if (m_format == CodeFormat::cf_utf8)
-	{
-		char buf[READ_LINE_MAXLEN] = {0};
-		if (0 == fgets(buf, READ_LINE_MAXLEN, m_file))
-			return 0;
-		strW.SetUtf8String(buf);
-	}
-	else if (m_format == CodeFormat::cf_utf16)
-	{
-		wchar_t buf[READ_LINE_MAXLEN] = {0};
-		if (0 == fgetws(buf, READ_LINE_MAXLEN, m_file))
-			return 0;
-
-		strW.SetData(buf);
-	}
-	else if (m_format == CodeFormat::cf_utf16_be)
-	{
-		wchar_t buf[READ_LINE_MAXLEN] = {0};
-		if (0 == fgetws(buf, READ_LINE_MAXLEN, m_file))
-			return 0;
-
-		UpdateBigToLittle(buf);
-
-		strW.SetData(buf);
-	}
-
-	if (strW.Right(2) == L"\r\n")
-		strW = strW.Left(strW.GetLength() - 2);
-	return strW.GetLength();
-}
-
-int	KFile::ReadString(KStringA & strA)
-{
-	if (m_format == CodeFormat::cf_ansi)
-	{
-		char buf[READ_LINE_MAXLEN] = {0};
-		if (0 == fgets(buf, READ_LINE_MAXLEN, m_file))
-			return 0;
-		strA = buf;
-	}
-	else if (m_format == CodeFormat::cf_utf8)
-	{
-		char buf[READ_LINE_MAXLEN] = {0};
-		if (0 == fgets(buf, READ_LINE_MAXLEN, m_file))
-			return 0;
-		strA.SetData(buf);
-	}
-	else if (m_format == CodeFormat::cf_utf16)
-	{
-		wchar_t buf[READ_LINE_MAXLEN] = {0};
-		if (0 == fgetws(buf, READ_LINE_MAXLEN, m_file))
-			return 0;
-
-		strA.SetData(buf);
-	}
-	else if (m_format == cf_utf16_be)
-	{
-		wchar_t buf[READ_LINE_MAXLEN] = {0};
-		if (0 == fgetws(buf, READ_LINE_MAXLEN, m_file))
-			return 0;
-		UpdateBigToLittle(buf);
-
-		strA.SetData(buf);
-	}
-
-	return strA.GetLength();
-}
-
-int	KFile::WriteString(KStringW strW)
-{
-	return WriteString(strW.c_str(), strW.GetLength());
-}
-
-int	KFile::WriteString(KStringA strA)
-{
-	return WriteString(strA.c_str(), strA.GetLength());
-}
-
-int	KFile::WriteString(const wchar_t* str, int len)
-{
-	if (0 == str || 0 == len)
-		return 0;
-
-	if (len < 0)
-		len = wcslen(str);
-
-	int ret = 0;
-	if (m_format == CodeFormat::cf_utf16)
-	{
-		ret = Write(str, len * sizeof(wchar_t));
-		ret += Write(g_return_line_flag, 4);
-	}
-	else if (m_format == CodeFormat::cf_ansi)
-	{
-		KStringA strA;
-		strA.SetData(str, len);
-		strA += "\r\n";
-		ret = Write(strA.c_str(), strA.GetLength());
-	}
-	else if (m_format == CodeFormat::cf_utf8)
-	{
-		KStringA strA = KStringW2Utf8(str, len);
-		strA += "\r\n";
-		ret = Write(strA.c_str(), strA.GetLength());
-	}
-	else if (m_format == CodeFormat::cf_utf16_be)
-	{
-		KStringW strW;
-		strW.SetData(str, len);
-		strW += L"\r\n";
-		
-		wchar_t* pd = strW.GetBuffer();
-		UpdateBigToLittle(pd);
-
-		ret = Write(pd, strW.GetLength() * sizeof(wchar_t));
-	}
-
-	return ret;
-}
-
-int	KFile::WriteString(const char* str, int len)
-{
-	if (0 == str || 0 == len)
-		return 0;
-
-	if (len < 0)
-		len = strlen(str);
-
-	int ret = 0;
-	if (m_format == CodeFormat::cf_ansi || m_format == CodeFormat::cf_utf8)
-	{
-		ret = Write(str, len);
-		ret += Write("\r\n", 2);
-	}
-	else if (m_format == CodeFormat::cf_utf16)
-	{
-		KStringW strW;
-		strW.SetData(str, len);
-		strW += L"\r\n";
-		ret = Write(strW.c_str(), strW.GetLength() * sizeof(wchar_t));
-	}
-	else if (m_format == CodeFormat::cf_utf16_be)
-	{
-		KStringW strW;
-		strW.SetData(str, len);
-		strW += L"\r\n";
-
-		wchar_t* pd = strW.GetBuffer();
-		UpdateBigToLittle(pd);
-
-		ret = Write(pd, strW.GetLength() * sizeof(wchar_t));
-	}
-
-	return ret;
-}
-
-int	KFile::GetLength()
+__int64	KFile::ReadFileLength()
 {
 	long tmp = ftell(m_file);
 	fseek(m_file, 0, SEEK_END);
 
 	long ret = ftell(m_file);
-	fseek(m_file, tmp, SEEK_END);
+	fseek(m_file, tmp, SEEK_SET);
 
 	return ret;
 }
@@ -385,14 +118,6 @@ int	KFile::Seek(int offset, int startPos)
 int	KFile::SeekToBegin()
 {
 	int ret = fseek(m_file, m_flagLen, SEEK_SET);
-	//if (m_format == cf_utf8)
-	//{
-	//	fseek(m_file, 3, SEEK_SET);
-	//}
-	//else if (m_format == cf_utf16 || m_format == cf_utf16_be)
-	//{
-	//	fseek(m_file, 2, SEEK_SET);
-	//}
 	return ret;
 }
 
@@ -401,38 +126,14 @@ int	KFile::SeekToEnd()
 	return fseek(m_file, 0, SEEK_END);
 }
 
-int	KFile::Write(const void* data, int len)
+int	KFile::Write(const void* data, int len, int type_size)
 {
-	return fwrite(data, 1, len, m_file);
+	return fwrite(data, type_size, len, m_file);
 }
 
-int	KFile::Read(void* data, int len)
+int	KFile::Read(void* data, int len, int type_size)
 {
-	return fread(data, 1, len, m_file);
-}
-
-KFile::CodeFormat KFile::GetCodeFormat()
-{
-	return m_format;
-}
-
-void KFile::SetCodeFormat(KFile::CodeFormat cf)
-{
-	fseek(m_file, 0, SEEK_SET);
-	
-	m_format = cf;
-	if (m_format == CodeFormat::cf_utf8)
-	{
-		fwrite(utf8, 1, 3, m_file);
-	}
-	else if (m_format == CodeFormat::cf_utf16)
-	{
-		fwrite(utf16, 1, 2, m_file);
-	}
-	else if (m_format == CodeFormat::cf_utf16_be)
-	{
-		fwrite(utf16_big, 1, 2, m_file);
-	}
+	return fread(data, type_size, len, m_file);
 }
 
 int KFile::EnumFiles(const TCHAR* filepath, const TCHAR* ext, KFileEnumProc proc, void* procData)

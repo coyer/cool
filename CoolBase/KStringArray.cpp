@@ -26,7 +26,7 @@ void s_DestroyDataProcA(void* pdata)
 KStringArrayA::KStringArrayA()
 {
 	m_sortMode = 1;
-	m_datas.SetSortProc(s_CompareDataProcA);
+	//m_datas.SetSortProc(s_CompareDataProcA);
 	m_datas.SetDestroyDataProc(s_DestroyDataProcA);
 }
 
@@ -35,22 +35,22 @@ KStringArrayA::~KStringArrayA()
 	RemoveAll();
 }
 
-int	KStringArrayA::AddString(const char* str)
+int	KStringArrayA::Add(const char* str)
 {
 	return m_datas.Add(new KStringA(str));
 }
 
-int	KStringArrayA::AddString(const wchar_t* str)
+int	KStringArrayA::Add(const wchar_t* str)
 {
 	return m_datas.Add(new KStringA(str));
 }
 
-int	KStringArrayA::AddString(const KStringA& str)
+int	KStringArrayA::Add(const KStringA& str)
 {
 	return m_datas.Add(new KStringA(str));
 }
 
-int	KStringArrayA::AddString(const KStringW& str)
+int	KStringArrayA::Add(const KStringW& str)
 {
 	return m_datas.Add(new KStringA(str));
 }
@@ -66,14 +66,59 @@ const char*	KStringArrayA::GetAt(int index)
 	return pStr->c_str();
 }
 
-KStringA* KStringArrayA::GetString(int index)
+KStringA KStringArrayA::GetString(int index)
 {
-	return (KStringA*)m_datas.GetAt(index);
+	KStringA *str = (KStringA*)m_datas.GetAt(index);
+	return *str;
 }
 
-void KStringArrayA::RemoveAt(int index)
+bool KStringArrayA::SetAt(int index, const KString& str)
 {
+	if (index < 0) return false;
+	if (index >= m_datas.GetCount()) {
+		m_datas.Add(new KStringA(str));
+		return true;
+	}
+	KStringA* p = (KStringA*)m_datas.GetAt(index);
+	p->SetData(str);
+	return true;
+}
+
+bool KStringArrayA::SetAt(int index, const char* str)
+{
+	if (index < 0) return false;
+	if (index >= m_datas.GetCount()) {
+		m_datas.Add(new KStringA(str));
+		return true;
+	}
+	KStringA* p = (KStringA*)m_datas.GetAt(index);
+	p->SetData(str);
+	return true;
+}
+
+bool KStringArrayA::SetAt(int index, const wchar_t* str)
+{
+	if (index < 0) return false;
+	if (index >= m_datas.GetCount()) {
+		m_datas.Add(new KStringA(str));
+		return true;
+	}
+	KStringA* p = (KStringA*)m_datas.GetAt(index);
+	p->SetData(str);
+	return true;
+}
+
+void KStringArrayA::Remove(int index, int count)
+{
+	m_datas.Remove(index, count);
+}
+
+KStringA KStringArrayA::RemoveAt(int index)
+{
+	KStringA* str = (KStringA*)m_datas.GetAt(index);
 	m_datas.RemoveAt(index);
+
+	return *str;
 }
 
 void KStringArrayA::RemoveAll()
@@ -162,7 +207,7 @@ KStringArrayW::KStringArrayW()
 {
 	m_sortMode = 0;
 	//m_datas.SetSortProc(s_CompareDataProcW);
-	//m_datas.SetDestroyDataProc(s_DestroyDataProcW);
+	m_datas.SetDestroyDataProc(s_DestroyDataProcW);
 }
 
 KStringArrayW::~KStringArrayW()
@@ -170,22 +215,22 @@ KStringArrayW::~KStringArrayW()
 	RemoveAll();
 }
 
-int	KStringArrayW::AddString(const char* str)
+int	KStringArrayW::Add(const char* str)
 {
 	return m_datas.Add(new KStringW(str));
 }
 
-int	KStringArrayW::AddString(const wchar_t* str)
+int	KStringArrayW::Add(const wchar_t* str)
 {
 	return m_datas.Add(new KStringW(str));
 }
 
-int	KStringArrayW::AddString(const KStringA& str)
+int	KStringArrayW::Add(const KStringA& str)
 {
 	return m_datas.Add(new KStringW(str));
 }
 
-int	KStringArrayW::AddString(const KStringW& str)
+int	KStringArrayW::Add(const KStringW& str)
 {
 	return m_datas.Add(new KStringW(str));
 }
@@ -201,14 +246,61 @@ const wchar_t* KStringArrayW::GetAt(int index)
 	return pStr->c_str();
 }
 
-KStringW* KStringArrayW::GetString(int index)
+KStringW KStringArrayW::GetString(int index)
 {
-	return (KStringW * )m_datas.GetAt(index);
+	KStringW* p =(KStringW * )m_datas.GetAt(index);
+	return *p;
 }
 
-void KStringArrayW::RemoveAt(int index)
+bool KStringArrayW::SetAt(int index, const KString& str)
 {
+	if (index < 0) return false;
+	if (index >= m_datas.GetCount()) {
+		m_datas.Add(new KStringW(str));
+		return true;
+	}
+	KStringW* p = (KStringW*)m_datas.GetAt(index);
+	p->SetData(str);
+	return true;
+}
+
+bool KStringArrayW::SetAt(int index, const char* str)
+{
+	if (index < 0) return false;
+	if (index >= m_datas.GetCount()) {
+		m_datas.Add(new KStringW(str));
+		return true;
+	}
+	KStringW* p = (KStringW*)m_datas.GetAt(index);
+	p->SetData(str);
+	return true;
+}
+
+bool KStringArrayW::SetAt(int index, const wchar_t* str)
+{
+	if (index < 0) return false;
+	if (index >= m_datas.GetCount()) {
+		m_datas.Add(new KStringW(str));
+		return true;
+	}
+	KStringW* p = (KStringW*)m_datas.GetAt(index);
+	p->SetData(str);
+	return true;
+}
+
+void KStringArrayW::Remove(int index, int count)
+{
+	m_datas.Remove(index, count);
+}
+
+KStringW KStringArrayW::RemoveAt(int index)
+{
+	KStringW* p = (KStringW*)m_datas.GetAt(index);
+	KString str = *p;
+
 	m_datas.RemoveAt(index);
+
+	return str;
 }
 
 void KStringArrayW::RemoveAll()

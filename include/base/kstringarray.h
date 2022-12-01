@@ -20,16 +20,21 @@ public:
 	KStringArrayA();
 	~KStringArrayA();
 
-	int	AddString(const char* str);
-	int	AddString(const wchar_t* str);
-	int	AddString(const KStringA& str);
-	int	AddString(const KStringW& str);
+	int	Add(const char* str);
+	int	Add(const wchar_t* str);
+	int	Add(const KStringA& str);
+	int	Add(const KStringW& str);
 	
 	int		GetCount();
-	KStringA* GetString(int index);
+	KStringA GetString(int index);
 	const char*	GetAt(int index);
 
-	void	RemoveAt(int index);
+	bool	SetAt(int index, const KString& str);
+	bool    SetAt(int index, const char* str);
+	bool    SetAt(int index, const wchar_t* str);
+	void    Remove(int index, int count = 1);
+	KStringA	RemoveAt(int index);
+
 	void	RemoveAll();
 
 	int		FindIndex(const char* str);
@@ -49,16 +54,19 @@ public:
 	KStringArrayW();
 	~KStringArrayW();
 
-	int	AddString(const char* str);
-	int	AddString(const wchar_t* str);
-	int	AddString(const KStringA& str);
-	int	AddString(const KStringW& str);
+	int	Add(const char* str);
+	int	Add(const wchar_t* str);
+	int	Add(const KStringA& str);
+	int	Add(const KStringW& str);
 	
 	int		GetCount();
-	KStringW* GetString(int index);
+	KStringW GetString(int index);
 	const wchar_t* GetAt(int index);
-
-	void	RemoveAt(int index);
+	bool	SetAt(int index, const KString& str);
+	bool    SetAt(int index, const char* str);
+	bool    SetAt(int index, const wchar_t* str);
+	void    Remove(int index, int count = 1);
+	KStringW	RemoveAt(int index);
 	void	RemoveAll();
 
 	int		FindIndex(const wchar_t* str);

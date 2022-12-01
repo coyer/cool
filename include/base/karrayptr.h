@@ -14,6 +14,7 @@ Detail : KArray is a PVOID ptr array. only for PVOID type. if you want string ar
 
 class KArrayPtrData;
 
+
 class KAPI KArrayPtr
 {
 	KArrayPtrData*		m_pData;
@@ -28,14 +29,16 @@ public:
 	~KArrayPtr();
 
 	int		GetCount();
+	bool    IsNull();
 	const PVOID	GetAt(int index);
 	const PVOID	GetData();
 
 	int		Add(PVOID pData);
 	int		Add(PVOID* pData, int count);
 
-	void	RemoveAt(int index, int count = 1, bool destroyData = true);
-	void	RemoveAll(bool destroyData = true);
+	PVOID	RemoveAt(int index, bool no_destroy = false);
+	void	Remove(int index, int count = 1);
+	void	RemoveAll();
 
 	void	SetSortProc(KCompareDataProc proc);
 	void	SetDestroyDataProc(KDestroyDataProc proc);

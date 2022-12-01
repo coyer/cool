@@ -163,7 +163,7 @@ KXmlNode* KXmlNode::AddChild(KString name, KXmlNode::NodeType type)
 KXmlNode* KXmlNode::PickupNode(int index)
 {
 	KXmlNode* node = (KXmlNode *)m_child.GetAt(index);
-	m_child.RemoveAt(index, 1, false);
+	m_child.RemoveAt(index);
 
 	return node;
 }
@@ -207,7 +207,7 @@ void KXmlNode::RemoveChild(int index)
 
 void KXmlNode::RemoveChildAll()
 {
-	m_child.RemoveAll(true);
+	m_child.RemoveAll();
 }
 
 int	KXmlNode::GetAttrCount()
@@ -251,7 +251,7 @@ void KXmlNode::RemoveAttr(int index)
 
 void KXmlNode::RemoveAttrAll()
 {
-	m_attrs.RemoveAll(true);
+	m_attrs.RemoveAll();
 }
 
 KString	KXmlNode::GetChildValueText(KString childname, KString defval)

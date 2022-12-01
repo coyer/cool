@@ -199,7 +199,7 @@ public:
 	KStringW& operator += (KStringW& str);
 
 	int		Compare(const wchar_t* str);
-	int		Compare(const KStringW& str);
+	int		Compare(KStringW& str);
 
 	inline bool operator == (const wchar_t* str) { return (0 == Compare(str));	}
 	inline bool operator != (const wchar_t* str) {	return (0 != Compare(str));	}

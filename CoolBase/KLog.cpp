@@ -110,12 +110,8 @@ bool KLogBaseDealer::_PrepareLogFile()
 	KString strFile;
 	strFile.Format(_T("%s%s.log"), m_logpath.c_str(), buff);
 
-	if (!m_file.Open(strFile, KFile::modeCreate | KFile::modeWrite))
+	if (!m_file.Create(strFile, KTextFile::cf_utf16))
 		return false;
-
-#ifdef WIN32
-	m_file.SetCodeFormat(KFile::cf_utf16);
-#endif
 
 	return true;
 }
@@ -422,7 +418,7 @@ void KLog::Dump(int logowner, unsigned char* buffer, int buflen)
 	if (!CalLogout(KLOGTYPE_DEBUG))
 		return;
 
-	KString strHex = KBuffer2HexString(buffer, buflen, 1, 0, 0);
+	KString strHex = KBufferToHexString(buffer, buflen, 1, 0, 0);
 	LogStr(KLOGTYPE_DEBUG, logowner, strHex);
 }
 

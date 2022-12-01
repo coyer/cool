@@ -49,10 +49,8 @@ KAPI bool		KString2IPV6(const wchar_t* str, unsigned char ipv6[16]);
 
 
 #ifdef UNICODE
-#define KBuffer2HexString		KBuffer2HexStringW
 #define KIP2StringW				KIP2String
 #else
-#define KBuffer2HexString		KBuffer2HexStringA
 #define KIP2StringA				KIP2String
 #endif
 

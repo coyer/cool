@@ -41,7 +41,7 @@ class KAPI KLogBaseDealer : public KLogDealer
 {
 	friend class KLog;
 protected:
-	KFile	m_file;
+	KTextFile	m_file;
 	KString	m_logpath;
 	int		m_OutputMode;
 

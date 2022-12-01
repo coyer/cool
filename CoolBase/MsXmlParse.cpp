@@ -393,8 +393,8 @@ bool CMsXmlParse::SaveXmlFile(const wchar_t* strFilename, KXmlNode* pRoot)
 {
 	KStringW strXml;
 
-	KFile file;
-	if (!file.Open(strFilename, KFile::modeCreate | KFile::modeWrite))
+	KTextFile file;
+	if (!file.Create(strFilename, KTextFile::cf_utf8));
 		return false;
 
 	PrintXmlToKString(strXml, pRoot, 0);
@@ -410,8 +410,8 @@ bool CMsXmlParse::SaveXmlFile(const char* strFilename, KXmlNode* pRoot)
 {
 	KStringW strXml;
 
-	KFile file;
-	if (!file.Open(strFilename, KFile::modeRead))
+	KTextFile file;
+	if (!file.Open(strFilename,false))
 		return false;
 
 	PrintXmlToKString(strXml, pRoot, 0);

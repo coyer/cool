@@ -54,8 +54,12 @@ KAPI int		KHexString2Buffer(const char* strHex, int len, unsigned char* outbuffe
 //KAPI bool		KStringWFromIPV6(unsigned char ipv4[16], KStringW& strOut);
 
 #ifdef UNICODE
-#define KBuffer2HexString		KBuffer2HexStringW
+#define KBufferToHexString		KBuffer2HexStringW
+#define KStringToUtf8			KStringW2Utf8
+#define KStringFromUtf8			KStringUtf82W
 #else
-#define KBuffer2HexString		KBuffer2HexStringA
+#define KBufferToHexString		KBuffer2HexStringA
+#define KStringToUtf8			KStringA2Utf8
+#define KStringFromUtf8			KStringUtf82A
 #endif
 

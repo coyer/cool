@@ -327,7 +327,7 @@ bool KVariant::ArrRemoveAll()
 	if (m_type != kvt_arr) return false;
 
 	KArrayPtr* pArr = (KArrayPtr*)m_data.ptr;
-	pArr->RemoveAll(true);
+	pArr->RemoveAll();
 
 	return true;
 }

@@ -57,12 +57,18 @@ KArrayPtr::KArrayPtr(KArrayPtr& arr)
 
 KArrayPtr::~KArrayPtr()
 {
+	RemoveAll();
 	m_pData->Release();
 }
 
 int	KArrayPtr::GetCount()
 {
 	return m_pData->GetCount();
+}
+
+bool KArrayPtr::IsNull()
+{
+	return m_pData->IsNull();
 }
 
 const PVOID KArrayPtr::GetAt(int index)
@@ -157,10 +163,23 @@ int	KArrayPtr::Add(PVOID* pData, int count)
 	return m_pData->GetCount();
 }
 
-void KArrayPtr::RemoveAt(int index, int count, bool destroyData)
+PVOID KArrayPtr::RemoveAt(int index, bool no_destroy)
 {
 	_AllocArray();
-	if (destroyData && m_procDestroyData)
+	PVOID p = m_pData->GetAt(index);
+	if (m_procDestroyData && !no_destroy)
+	{
+		m_procDestroyData(p);
+		p = NULL;
+	}
+	m_pData->RemoveAt(index);
+	return p;
+}
+
+void KArrayPtr::Remove(int index, int count)
+{
+	_AllocArray();
+	if (m_procDestroyData)
 	{
 		for(int i = index; i<count; i++)
 		{
@@ -170,9 +189,9 @@ void KArrayPtr::RemoveAt(int index, int count, bool destroyData)
 	m_pData->RemoveAt(index, count);
 }
 
-void KArrayPtr::RemoveAll(bool destroyData)
+void KArrayPtr::RemoveAll()
 {
-	if (destroyData && m_procDestroyData)
+	if (m_procDestroyData)
 	{
 		for(int i = 0; i<m_pData->GetCount(); i++)
 		{
@@ -269,8 +288,10 @@ KArrayPtr& KArrayPtr::operator = (KArrayPtr& arr)
 {
 	if (m_pData == arr.m_pData)
 		return *this;
-
+	
+	RemoveAll();
 	m_pData->Release();
+	
 	arr.m_pData->AddRef();
 	m_pData = arr.m_pData;
 
@@ -305,6 +326,11 @@ int	KArrayPtr::InsertData(int index, PVOID* pDatas, int count)
 void KArrayPtr::SetAt(int index, PVOID pData)
 {
 	_AllocArray();
+	PVOID p = m_pData->GetAt(index);
+	if (m_procDestroyData)
+	{
+		m_procDestroyData(p);
+	}
 	m_pData->SetAt(index, pData);
 }
 

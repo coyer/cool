@@ -13,131 +13,184 @@ Detail : KRefBase is a base Obj class. some other class is derived from this cla
 #include "karrayptr.h"
 #include "kstring.h"
 
-class KAPI KJSObj
+class KAPI KJson : public KRefBase
 {
 public:
 	enum JSonType
 	{
-		Void,
-		String,
-		NUM_int,
-		NUM_int64,
-		NUM_double,
-		Object,
-		Array
+		JST_UNKNOWN,
+		JST_VALUE,
+		JST_OBJECT,
+		JST_ARRAY,
 	};
 
-	KJSObj();
-	virtual JSonType GetType() = 0;
-	virtual BOOL fromString(const KString& str) = 0;
+	enum JSonValueType
+	{
+		JSVT_NONE,
+		JSVT_INT,
+		JSVT_DOUBLE,
+		JSVT_INT64,
+		JSVT_STRING
+	};
+
+	KJson();
+	virtual JSonType getType() = 0;
 	virtual KString toString() = 0;
-	virtual void Clear() = 0;
+	virtual void clear() = 0;
+	virtual KJson* clone() = 0;
+
+	bool saveToFile(const KString& filename);
+
+	bool isValue();
+	bool isObject();
+	bool isArray();
+
+	static KJson* FromFile(const KString& filename);
+	static KJson* FromString(const KString& str);
 };
 
-class KAPI KJSValue : public KJSObj
+class KAPI KJValue : public KJson
 {
 public:
-	virtual int	asInt() = 0;
+	virtual JSonType getType();
+	virtual KString toString();
+
+	virtual int		asInt() = 0;
 	virtual double	asDouble() = 0;
 	virtual __int64	asInt64() = 0;
 	virtual char	asChar() = 0;
 	virtual KString	asString() = 0;
+	virtual JSonValueType getValueType() = 0;
+
+	bool isString();
+	bool isInt();
+	bool isDouble();
+	bool isNumber();
 };
 
-class KAPI KJSInt : public KJSValue {
+class KAPI KJNumber : public KJValue 
+{
 public:
-	virtual JSonType GetType();
-	virtual BOOL fromString(KString& str);
-	virtual KString toString();
-	virtual void Clear();
+	KJNumber();
+	KJNumber(KJNumber& num);
+	KJNumber(JSonValueType number_type);
+	KJNumber(int v);
+	KJNumber(__int64 v);
+	KJNumber(double v);
+	virtual JSonValueType getValueType();
+	virtual void clear();
+	virtual KJson* clone();
+
 	virtual int	asInt();
 	virtual double	asDouble();
 	virtual __int64	asInt64();
 	virtual char	asChar();
 	virtual KString	asString();
+
+	int get();
+	void set(int v);
+	void set(__int64 v);
+	void set(double v);
+
 protected:
-	int	m_data;
+	union VarData
+	{
+		double dbl;
+		int val;
+		__int64 in64;
+	} m_data;
+	JSonValueType m_type;
 };
 
-class KAPI KJSInt64 : public KJSValue {
+class KAPI KJString : public KJValue
+{
 public:
-	virtual JSonType GetType();
-	virtual BOOL fromString(const KString& str);
-	virtual KString toString();
-	virtual void Clear();
+	KJString();
+	KJString(KJString& obj);
+	KJString(KJNumber& obj);
+	KJString(const KString& str);
+	KJString(const char* pStr);
+	KJString(const wchar_t* pStr);
+	virtual JSonValueType getValueType();
+
+	virtual void clear();
+	virtual KJson* clone();
+
 	virtual int	asInt();
 	virtual double	asDouble();
 	virtual __int64	asInt64();
 	virtual char	asChar();
 	virtual KString	asString();
-protected:
-	__int64	m_data;
-};
+	KString get();
+	void set(const KString& str);
 
-class KAPI KJSDouble : public KJSValue {
-public:
-	virtual JSonType GetType();
-	virtual BOOL fromString(const KString& str);
-	virtual KString toString();
-	virtual void Clear();
-	virtual int	asInt();
-	virtual double	asDouble();
-	virtual __int64	asInt64();
-	virtual char asChar();
-	virtual KString	asString();
-protected:
-	double	m_data;
-};
-
-class KAPI KJSString : public KJSValue {
-public:
-	virtual JSonType GetType();
-	virtual BOOL fromString(const KString& str);
-	virtual KString toString();
-	virtual void Clear();
-	virtual int	asInt();
-	virtual double	asDouble();
-	virtual __int64	asInt64();
-	virtual char	asChar();
-	virtual KString	asString();
 protected:
 	KString	m_data;
 };
 
-class KAPI KJSDic {
-	friend class KJSArr;
+/// <summary>
+/// 
+/// </summary>
+class KAPI KJArr : public KJson {
 public:
-	KJSDic();
-	~KJSDic();
-
-	void SetValue(KString key, int val);
-	void SetValue(KString key, __int64 val);
-	void SetValue(KString key, double val);
-	void SetValue(KString key, KString val);
-	void SetValue(KString key, LPCTSTR val);
-	void SetValue(KString key, KJSObj* val);
-	void SetValue(KString key, KJSArr* val);
-
-	BOOL fromString(const KString& str);
-	KString toString();
-private:
-
+	KJArr();
+	KJArr(KJArr& arr);
+	~KJArr();
+	virtual JSonType getType();
+	virtual KString toString();
+	void clear();
+	KJson* clone();
+	
+	int add(KJson* v);
+	void set(int index, KJson* v);
+	void remove(int index, int count = 1);
+	int getCount();
+	KJson* get(int index);
+	KJson* operator[] (int index);
+	
+protected:
+	KArrayPtr m_data;
 };
 
-class KAPI KJSArr {
-public:
-	KJSArr();
-	~KJSArr();
-};
-
-class KAPI KJSon
+class KJObjectPairData : public KRefBase
 {
+	KJObjectPairData();
 public:
+	KString keyname;
+	KJson* value;
 
-public:
-	KJSon();
-	virtual~KJSon();
+	KJObjectPairData(const KString& name, KJson* v);
+	~KJObjectPairData();
 
-	BOOL fromString(const KString* str);
-	KString toString();
+	void setValue(KJson* val);
+
+	KJObjectPairData* clone();
 };
+
+class KAPI KJObject : public KJson {
+public:
+	KJObject();
+	~KJObject();
+	virtual JSonType getType();
+	virtual KString toString();
+	virtual void clear();
+	virtual KJson* clone();
+
+	void set(const KString& name, int val);
+	void set(const KString& name, __int64 val);
+	void set(const KString& name, double val);
+	void set(const KString& name, const KString& val);
+	void set(const KString& name, const char* val);
+	void set(const KString& name, const wchar_t* val);
+	void set(const KString& name, KJson* val);
+
+	KJson* get(const KString& name);
+	KStringArray getKeys();
+
+private:
+	KJObjectPairData* _FindPairData(const KString& name);
+
+private:
+	KArrayPtr	m_data;
+};
+
