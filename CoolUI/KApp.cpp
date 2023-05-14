@@ -80,7 +80,7 @@ void KWinApp::ExitInstance()
 
 void KWinApp::CloseApp()
 {
-	m_pMainWnd->PostMessage(WM_COMMAND, MAKEWPARAM(0, IDM_EXIT, 0), 0);
+	m_pMainWnd->PostMessage(WM_COMMAND, MAKEWPARAM(IDM_EXIT, 0, 0), 0);
 }
 
 KRealWndBase* KWinApp::CreateMainWnd(int nCmdShow)

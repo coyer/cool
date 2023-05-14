@@ -11,11 +11,8 @@ public:
 	KButtonBase();
 	virtual ~KButtonBase();
 
-	virtual		void	OnLButtonUp(UINT nFlags, KPoint pt);
-	virtual		void	OnRButtonUp(UINT nFlags, KPoint pt);
-
-	virtual void	OnLClick();
-	virtual void	OnRClick();
+	virtual void	OnLClick(UINT nFlags, KPoint pt);
+	virtual void	OnRClick(UINT nFlags, KPoint pt);
 
 	void	SetClickEvent(ButtonExecProc proc, void* pData);
 

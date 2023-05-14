@@ -275,7 +275,7 @@ public:
 		m_pData[index] = ch;
 	}
 
-	U32 Add(T& val)
+	U32 Add(T val)
 	{
 		_AllocBuffer(m_nCount + 1);
 		m_pData[m_nCount++] = val;

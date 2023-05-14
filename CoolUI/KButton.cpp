@@ -12,50 +12,30 @@ KButtonBase::~KButtonBase()
 {
 }
 
-void KButtonBase::OnLClick()
+void KButtonBase::OnLClick(UINT nFlags, KPoint pt)
 {
-	if (m_ClickProc)
+	if (m_ClickProc) {
 		m_ClickProc(TRUE, m_ClickProcData);
+	}
+	else {
+		KView::OnLClick(nFlags, pt);
+	}
 }
 
-void KButtonBase::OnRClick()
+void KButtonBase::OnRClick(UINT nFlags, KPoint pt)
 {
-	if (m_ClickProc)
+	if (m_ClickProc) {
 		m_ClickProc(FALSE, m_ClickProcData);
+	}
+	else {
+		KView::OnRClick(nFlags, pt);
+	}
 }
 
 void KButtonBase::SetClickEvent(ButtonExecProc proc, void* pData)
 {
 	m_ClickProc  = proc;
 	m_ClickProcData = pData;
-}
-
-void KButtonBase::OnLButtonUp(UINT nFlags, KPoint pt)
-{
-	BOOL bClick = FALSE;
-	if (IsMouseLDown())
-	{
-		bClick = TRUE;
-	}
-
-	KView::OnLButtonUp(nFlags, pt);
-
-	if (bClick)
-		OnLClick();
-}
-
-void KButtonBase::OnRButtonUp(UINT nFlags, KPoint pt)
-{
-	BOOL bClick = FALSE;
-	if (IsMouseRDown())
-	{
-		bClick = TRUE;		
-	}
-
-	KView::OnLButtonUp(nFlags, pt);
-
-	if (bClick)
-		OnRClick();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
